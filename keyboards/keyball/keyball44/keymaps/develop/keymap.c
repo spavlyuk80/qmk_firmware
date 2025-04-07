@@ -38,8 +38,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
  
   [2] = LAYOUT_universal(
-    _______    , _______    , _______   , _______    , _______    , _______    ,                           KC_BSPC  , KC_DEL    , _______    , _______   , _______   , _______   ,
-    SSNP_VRT ,  _______    , _______   , _______    , _______    , _______    ,                            KC_PGUP  , KC_HOME ,  KC_BTN1  , KC_UP    , KC_BTN2  , KC_BTN3  , 
+    _______    , _______    , _______   , _______    , _______    , KC_VOLU    ,                           KC_BSPC  , KC_DEL    , _______    , _______   , _______   , _______   ,
+    SSNP_VRT ,  _______    , _______   , _______    , _______    , KC_VOLD    ,                            KC_PGUP  , KC_HOME ,  KC_BTN1  , KC_UP    , KC_BTN2  , KC_BTN3  , 
     SSNP_HOR ,  _______    , _______   , _______    , _______    , _______    ,                            KC_PGDN  , KC_END ,   KC_LEFT  , KC_DOWN  , KC_RGHT  , _______  ,
                   SSNP_FRE , KC_LALT , KC_LCTL  ,   _______  , KC_LSFT  ,                           _______  , _______  , _______    , _______  , _______
   ),
@@ -54,7 +54,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [4] = LAYOUT_universal(
     RGB_TOG  , _______  , _______  , _______  , _______  , _______  ,                                        RGB_M_P  , RGB_M_B  , RGB_M_R  , RGB_M_SW , RGB_M_SN , RGB_M_K  ,
     RGB_MOD  , RGB_HUI  , RGB_SAI  , RGB_VAI  , _______  , SCRL_DVI ,                                        RGB_M_X  , RGB_M_G  , RGB_M_T  , RGB_M_TW , _______  , _______  ,
-    CPI_D1K  , CPI_D100 , CPI_I100 , CPI_I1K  , _______  , SCRL_DVD ,                                        CPI_D1K  , CPI_D100 , CPI_I100 , CPI_I1K  , _______  , KBC_SAVE ,
+    CPI_D1K  , CPI_D100 , CPI_I100 , CPI_I1K  , _______  , SCRL_DVD ,                                       CPI_D1K  , CPI_D100 , CPI_I100 , CPI_I1K  , _______  , KBC_SAVE ,
                     QK_BOOT  , KBC_RST  , KBC_SAVE  ,      _______  , _______     ,               _______  , _______  ,      _______  , KBC_RST  , QK_BOOT
   ),
 
