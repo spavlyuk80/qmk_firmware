@@ -25,11 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #ifndef KEYBALL_SCROLL_DIV_DEFAULT
-#    define KEYBALL_SCROLL_DIV_DEFAULT 4 // 4: 1/8 (1/2^(n-1))
-#endif
-
-#ifndef KEYBALL_REPORTMOUSE_INTERVAL
-#    define KEYBALL_REPORTMOUSE_INTERVAL 8 // mouse report rate: 125Hz
+#    define KEYBALL_SCROLL_DIV_DEFAULT 3 // 4: 1/8 (1/2^(n-1))
 #endif
 
 #ifndef KEYBALL_SCROLLBALL_INHIVITOR
@@ -122,7 +118,7 @@ enum keyball_keycodes {
 typedef union {
     uint32_t raw;
     struct {
-        uint8_t cpi : 7;
+        uint16_t cpi;
         uint8_t sdiv : 3;  // scroll divider
 #ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
         uint8_t amle : 1;  // automatic mouse layer enabled
@@ -159,8 +155,7 @@ typedef struct {
     keyball_motion_t this_motion;
     keyball_motion_t that_motion;
 
-    uint8_t cpi_value;
-    bool    cpi_changed;
+    uint16_t cpi_value;
 
     bool     scroll_mode;
     uint32_t scroll_mode_changed;
@@ -201,12 +196,12 @@ void keyball_on_adjust_layout(keyball_adjust_t v);
 /// keyball_on_apply_motion_to_mouse_move applies trackball's motion m to r as
 /// mouse movement.
 /// You can change the default algorithm by override this function.
-void keyball_on_apply_motion_to_mouse_move(keyball_motion_t *m, report_mouse_t *r, bool is_left);
+void keyball_on_apply_motion_to_mouse_move(report_mouse_t *r, report_mouse_t *o, bool is_left);
 
 /// keyball_on_apply_motion_to_mouse_scroll applies trackball's motion m to r
 /// as mouse scroll.
 /// You can change the default algorithm by override this function.
-void keyball_on_apply_motion_to_mouse_scroll(keyball_motion_t *m, report_mouse_t *r, bool is_left);
+void keyball_on_apply_motion_to_mouse_scroll(report_mouse_t *r, report_mouse_t *o, bool is_left);
 
 //////////////////////////////////////////////////////////////////////////////
 // Public API functions
@@ -256,17 +251,17 @@ uint8_t keyball_get_scroll_div(void);
 void keyball_set_scroll_div(uint8_t div);
 
 /// keyball_get_cpi gets current CPI of trackball.
-/// The actual CPI value is the returned value multiplied by 100:
+/// The actual CPI value is the returned value +1 and multiplied by 100:
 ///
-///     CPI = v * 100
-uint8_t keyball_get_cpi(void);
+///     CPI = (v + 1) * 100
+uint16_t keyball_get_cpi(void);
 
 /// keyball_set_cpi changes CPI of trackball.
-/// Valid values are 0 to 120. If it is 0, KEYBALL_CPI_DEFAULT will be used,
-/// otherwise the actual CPI value will be the set value multiplied by 100:
+/// Valid values are between 0 to 119, and the actual CPI value is the set
+/// value +1 and multiplied by 100:
 ///
-///     CPI = v * 100
+///     CPI = (v + 1) * 100
 ///
 /// In addition, if you do not upload SROM, the maximum value will be limited
-/// to 35 (3500CPI).
-void keyball_set_cpi(uint8_t cpi);
+/// to 34 (3500CPI).
+void keyball_set_cpi(uint16_t cpi);
