@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_ROW_PINS     { GP29, GP28, GP27, GP26 }
 #define MATRIX_COL_PINS     { GP4, GP5, GP6, GP7, GP8, GP9 }
 #define MATRIX_MASKED
-#define DEBOUNCE            5
+#define DEBOUNCE            3
 #define DIODE_DIRECTION     COL2ROW
 
 // Split parameters

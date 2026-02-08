@@ -35,5 +35,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define TAP_CODE_DELAY 5
 
+// Scroll divider: 1=fast, 15=slowest. Default is 3.
+// 13 means 1/4096 speed (50% slower than 12)
+#define KEYBALL_SCROLL_DIV_DEFAULT 13
+
 #define POINTING_DEVICE_AUTO_MOUSE_ENABLE
 #define AUTO_MOUSE_DEFAULT_LAYER 1

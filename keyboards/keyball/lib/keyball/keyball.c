@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 const uint16_t CPI_DEFAULT    = KEYBALL_CPI_DEFAULT;
 // Anything above this value makes the cursor fly across the screen.
 const uint16_t CPI_MAX        = 3000 + 1;
-const uint8_t SCROLL_DIV_MAX = 7;
+const uint8_t SCROLL_DIV_MAX = 15;
 
 const uint16_t AML_TIMEOUT_MIN = 100;
 const uint16_t AML_TIMEOUT_MAX = 1000;
