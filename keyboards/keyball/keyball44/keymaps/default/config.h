@@ -35,9 +35,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define TAP_CODE_DELAY 5
 
-// Scroll divider: 1=fast, 15=slowest. Default is 3.
-// 13 means 1/4096 speed (50% slower than 12)
-#define KEYBALL_SCROLL_DIV_DEFAULT 13
+// Scroll: extra div slows all levels (div 1 at 4x = effective div 4). Tune with SCRL_DVI/SCRL_DVD + KBC_SAVE.
+#define KEYBALL_SCROLL_DIV_DEFAULT 4
+#define KEYBALL_SCROLL_EXTRA_DIV 4
+
+// Pointer: linear (100).
+#define KEYBALL_POINTER_ACCEL_EXPONENT 100
+#define KEYBALL_POINTER_ACCEL_SCALE 100
+
+// High-resolution scroll: macOS (and others) interpret wheel as smooth scroll (1/120 tick).
+// Makes trackball scroll feel proper on Mac instead of stepped.
+#define POINTING_DEVICE_HIRES_SCROLL_ENABLE
 
 #define POINTING_DEVICE_AUTO_MOUSE_ENABLE
 #define AUTO_MOUSE_DEFAULT_LAYER 1

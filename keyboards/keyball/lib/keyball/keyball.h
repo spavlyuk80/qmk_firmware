@@ -28,6 +28,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    define KEYBALL_SCROLL_DIV_DEFAULT 3 // 4: 1/8 (1/2^(n-1))
 #endif
 
+/// Extra divisor applied only when in scroll mode (trackball as scroll). 1 = no change, 2 = half speed.
+#ifndef KEYBALL_SCROLL_EXTRA_DIV
+#    define KEYBALL_SCROLL_EXTRA_DIV 1
+#endif
+
+/// Power-curve acceleration: out = sign(in) * scale * |in|^exponent.
+/// Exponent: 100 = linear (off), <100 = more precise (e.g. 80), >100 = more flick (e.g. 120). Scale: 100 = 1.0.
+#ifndef KEYBALL_POINTER_ACCEL_EXPONENT
+#    define KEYBALL_POINTER_ACCEL_EXPONENT 100
+#endif
+#ifndef KEYBALL_POINTER_ACCEL_SCALE
+#    define KEYBALL_POINTER_ACCEL_SCALE 100
+#endif
+#ifndef KEYBALL_SCROLL_ACCEL_EXPONENT
+#    define KEYBALL_SCROLL_ACCEL_EXPONENT 100
+#endif
+#ifndef KEYBALL_SCROLL_ACCEL_SCALE
+#    define KEYBALL_SCROLL_ACCEL_SCALE 100
+#endif
+
+/// Max scroll units per report (clamped before HID). Stops tiny moves from jumping hundreds of lines.
+#ifndef KEYBALL_SCROLL_MAX_PER_REPORT
+#    define KEYBALL_SCROLL_MAX_PER_REPORT 127
+#endif
+
 #ifndef KEYBALL_SCROLLBALL_INHIVITOR
 #    define KEYBALL_SCROLLBALL_INHIVITOR 50
 #endif

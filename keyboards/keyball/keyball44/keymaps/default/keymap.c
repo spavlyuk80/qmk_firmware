@@ -37,7 +37,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_ESC   , KC_Q     , KC_W     , KC_E     , KC_R     , KC_T     ,                            KC_Y     , KC_U     , KC_I     , KC_O     , KC_P     , KC_MINS   ,
     KC_TAB   , KC_A     , KC_S     , KC_D     , KC_F     , KC_G     ,                            KC_H     , KC_J     , KC_K     , KC_L     , KC_SCLN  , KC_QUOT  ,
     LT(3, _______)  , KC_Z     , KC_X     , KC_C     , KC_V     , KC_B     ,                            KC_N     , KC_M     , KC_COMM  , KC_DOT   , KC_SLSH  , KC_EQL  ,
-               KC_LALT  , KC_LCTL  , KC_LGUI  , LT(1,KC_SPC), KC_LSFT,          KC_BSPC , LT(2,KC_ENT),                                          KC_RSFT
+               KC_LALT  , KC_LCTL  , KC_LSFT  , LT(1,KC_SPC), KC_LGUI,          KC_BSPC , LT(2,KC_ENT),                                          KC_RSFT
   ),
 
   // Layer 1: Navigation and Function keys
@@ -52,14 +52,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [2] = LAYOUT_right_ball(
     KC_GRV   , KC_1     , KC_2     , KC_3     , KC_4     , KC_5     ,                            KC_6     , KC_7     , KC_8     , KC_9     , KC_0     , KC_MINS  ,
     KC_NUBS  , KC_EXLM  , KC_AT    , KC_HASH  , KC_DLR   , KC_PERC  ,                            KC_CIRC  , KC_AMPR  , KC_ASTR  , KC_LPRN  , KC_RPRN  , KC_UNDS  ,
-    S(KC_NUBS), KC_EQL  , KC_PLUS  , KC_LBRC  , KC_RBRC  , KC_BSLS  ,                            KC_LCBR  , KC_RCBR  , KC_PIPE  , _______  , _______  , _______  ,
+    S(KC_NUBS), KC_EQL  , KC_PLUS  , KC_BSLS  , KC_LBRC  , KC_RBRC  ,                             KC_LCBR  , KC_RCBR  , KC_PIPE  , _______  , _______  , _______  ,
                _______  , _______  , _______  , _______  , _______  ,                 _______   , _______  ,                                            _______
   ),
 
   // Layer 3: Trackball settings, System, and Media
   [3] = LAYOUT_right_ball(
     _______  , AML_TO   , AML_I50  , AML_D50  , _______  , _______  ,                            KC_MPRV  , KC_MPLY  , KC_MNXT  , KC_MUTE  , KC_VOLD  , KC_VOLU  ,
-    _______  , _______  , _______  , _______  , _______  , SCRL_DVI ,                            _______  , _______  , _______  , _______  , _______  , _______  ,
+    SSNP_VRT , SSNP_HOR , SSNP_FRE , _______  , _______  , SCRL_DVI ,                            _______  , _______  , _______  , _______  , _______  , _______  ,
     _______  , _______  , _______  , _______  , _______  , SCRL_DVD ,                            CPI_D1K  , CPI_D100 , CPI_I100 , CPI_I1K  , _______  , KBC_SAVE ,
                QK_BOOT  , KBC_RST  , _______  , _______  , _______  ,                 _______  , _______  ,                                            QK_BOOT
   ),

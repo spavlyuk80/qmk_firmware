@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "drivers/sensors/pmw33xx_common.h"
 
 #include <string.h>
+#include <math.h>
 
 const uint16_t CPI_DEFAULT    = KEYBALL_CPI_DEFAULT;
 // Anything above this value makes the cursor fly across the screen.
@@ -63,7 +64,8 @@ __attribute__((weak)) void keyball_on_adjust_layout(keyball_adjust_t v) {}
 // Static utilities
 
 // divmod16 divides *v by div, returns the quotient, and assigns the remainder
-// to *v.
+// to *v. (Used by code that does not use scroll accumulation.)
+__attribute__((unused))
 static mouse_xy_report_t divmod16(mouse_xy_report_t *v, int16_t div) {
     mouse_xy_report_t r = *v / div;
     *v -= r * div;
@@ -73,6 +75,19 @@ static mouse_xy_report_t divmod16(mouse_xy_report_t *v, int16_t div) {
 // clip2int8 clips an integer fit into int8_t.
 static inline int8_t clip2int8(int16_t v) {
     return (v) < -127 ? -127 : (v) > 127 ? 127 : (int8_t)v;
+}
+
+// Power-curve acceleration: out = sign(in) * scale * |in|^exponent. exponent/scale in hundredths (100 = 1.0).
+static inline int16_t apply_power_curve(int16_t in, int exponent, int scale) {
+    if (in == 0) return 0;
+    if (exponent == 100 && scale == 100) return in; // linear passthrough
+    float v  = (float)in;
+    float e  = (float)exponent / 100.0f;
+    float s  = (float)scale / 100.0f;
+    float out = copysignf(s * powf(fabsf(v), e), v);
+    if (out < INT16_MIN) return INT16_MIN;
+    if (out > INT16_MAX) return INT16_MAX;
+    return (int16_t)roundf(out);
 }
 
 #ifdef OLED_ENABLE
@@ -141,26 +156,32 @@ void pointing_device_init_kb(void) {
 }
 
 __attribute__((weak)) void keyball_on_apply_motion_to_mouse_move(report_mouse_t *report, report_mouse_t *output, bool is_left) {
-// #if KEYBALL_MODEL == 61 || KEYBALL_MODEL == 39 || KEYBALL_MODEL == 147 || KEYBALL_MODEL == 44
-//     output->x = clip2int8(report->y);
-//     output->y = clip2int8(report->x);
-//     if (is_left) {
-//         output->x = -output->x;
-//         output->y = -output->y;
-//     }
-// #else
-// #    error("unknown Keyball model")
-// #endif
-    output->x = report->x;
-    output->y = report->y;
-
+    output->x = apply_power_curve(report->x, KEYBALL_POINTER_ACCEL_EXPONENT, KEYBALL_POINTER_ACCEL_SCALE);
+    output->y = apply_power_curve(report->y, KEYBALL_POINTER_ACCEL_EXPONENT, KEYBALL_POINTER_ACCEL_SCALE);
 }
 
 __attribute__((weak)) void keyball_on_apply_motion_to_mouse_scroll(report_mouse_t *report, report_mouse_t *output, bool is_left) {
-    // consume motion of trackball.
-    int16_t div = 1 << (keyball_get_scroll_div() - 1);
-    int16_t x = divmod16(&report->x, div);
-    int16_t y = divmod16(&report->y, div);
+    // Accumulate motion so slow movement eventually scrolls (remainder carried across reports).
+    static int16_t accum_x_left, accum_y_left, accum_x_right, accum_y_right;
+    int16_t *ax = is_left ? &accum_x_left : &accum_x_right;
+    int16_t *ay = is_left ? &accum_y_left : &accum_y_right;
+    *ax += (int16_t)report->x;
+    *ay += (int16_t)report->y;
+
+    int16_t div = (1 << (keyball_get_scroll_div() - 1)) * KEYBALL_SCROLL_EXTRA_DIV;
+    int16_t x   = *ax / div;
+    *ax -= x * div;
+    int16_t y   = *ay / div;
+    *ay -= y * div;
+    x = apply_power_curve(x, KEYBALL_SCROLL_ACCEL_EXPONENT, KEYBALL_SCROLL_ACCEL_SCALE);
+    y = apply_power_curve(y, KEYBALL_SCROLL_ACCEL_EXPONENT, KEYBALL_SCROLL_ACCEL_SCALE);
+
+    // Cap per report so a tiny move can't jump hundreds of lines
+    int16_t cap = (int16_t)KEYBALL_SCROLL_MAX_PER_REPORT;
+    if (x > cap) x = cap;
+    else if (x < -cap) x = -cap;
+    if (y > cap) y = cap;
+    else if (y < -cap) y = -cap;
 
     // apply to mouse report.
 #if KEYBALL_MODEL == 61 || KEYBALL_MODEL == 39 || KEYBALL_MODEL == 147 || KEYBALL_MODEL == 44
